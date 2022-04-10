@@ -1,0 +1,18 @@
+<launch>
+    <node pkg="video_stream_opencv" type="video_stream" name="video_stream" output="screen">
+        <remap from="camera" to="/image_raw" />
+        <param name="video_stream_provider" type="string" value="$(find traffic_light_fetcher)/data/tl-300x300.mp4" />
+        <param name="loop_videofile" type="bool" value="true" />
+    </node>
+
+    <node name="vis" pkg="rqt_gui" type="rqt_gui" args="--perspective-file $(find traffic_light_fetcher)/data/rqt.perspective" required="true">
+    </node>
+
+    <node pkg="traffic_light_fetcher" type="traffic_light_fetcher" name="traffic_light_fetcher" output="screen">
+        <param name="onnx_file" type="string" value="$(find traffic_light_fetcher)/data/mb2-ssd-lite-tlr.onnx"/>
+        <param name="label_file" type="string" value="$(find traffic_light_fetcher)/data/voc_labels_tl.txt"/>
+    </node>
+
+    <node pkg="traffic_light_fetcher" type="traffic_light_analysis" name="traffic_light_analysis" output="screen">
+    </node>
+</launch>
